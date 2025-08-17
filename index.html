@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Minesweeping</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Login Modal -->
+  <div id="loginModal" class="modal">
+    <div class="modal-content">
+      <h2>Welcome to Minesweeping!</h2>
+      <form id="loginForm">
+        <label for="username">Username:</label>
+        <input id="username" name="username" required>
+        <label for="password">Password:</label>
+        <input id="password" type="password" name="password" required>
+        <button type="submit">Login</button>
+        <p id="loginError"></p>
+        <small>No account recovery! If you forget your password, your account is lost.</small>
+      </form>
+    </div>
+  </div>
+
+  <!-- Daily Challenge Notification -->
+  <div id="dailyNotif" class="notif hidden">
+    <span>🎉 New Daily Challenge available!</span>
+    <button id="notifClose">X</button>
+  </div>
+
+  <!-- Main Menu -->
+  <div id="mainMenu" class="menu hidden">
+    <h1>Minesweeping</h1>
+    <button id="playBtn">Play</button>
+    <button id="dailyBtn">Daily Challenge</button>
+    <button id="statsBtn">Statistics</button>
+    <button id="howToBtn">How to Play</button>
+    <button id="settingsBtn">Settings</button>
+    <div id="themePicker"></div>
+    <div id="currentUser"></div>
+    <button id="logoutBtn">Logout</button>
+  </div>
+
+  <!-- Game UI -->
+  <div id="gameContainer" class="hidden">
+    <div id="gameHeader">
+      <button id="backBtn">← Menu</button>
+      <div id="bombCounter">000</div>
+      <div id="smileyFace" title="Restart Game">
+        <span id="smileyIcon">😊</span>
+        <span id="hintBulb" class="hidden" title="Use a hint">💡x2</span>
+      </div>
+      <div id="timer">000</div>
+      <button id="fullscreenBtn">[⛶]</button>
+    </div>
+    <div id="minefield"></div>
+    <div id="cellSizePicker">
+      <label>Cell Size:
+        <select id="cellSizeSelect">
+          <option value="small">Small (classic)</option>
+          <option value="medium">Medium</option>
+          <option value="large">Large</option>
+        </select>
+      </label>
+    </div>
+  </div>
+
+  <!-- Settings Modal -->
+  <div id="settingsModal" class="modal hidden">
+    <div class="modal-content">
+      <h2>Settings</h2>
+      <label>Theme:
+        <select id="themeSelect">
+          <option value="classic">Classic</option>
+          <option value="light">Light</option>
+          <option value="dark">Dark</option>
+          <option value="black">Black</option>
+        </select>
+      </label>
+      <label>Difficulty:
+        <select id="difficultySelect">
+          <option value="easy">Easy</option>
+          <option value="medium">Medium</option>
+          <option value="hard">Hard</option>
+          <option value="extreme">Extreme</option>
+        </select>
+      </label>
+      <button id="settingsClose">Close</button>
+    </div>
+  </div>
+
+  <!-- Statistics Modal -->
+  <div id="statsModal" class="modal hidden">
+    <div class="modal-content">
+      <h2>Statistics</h2>
+      <div id="statsContent">
+        <!-- Stats dynamically populated -->
+      </div>
+      <button id="statsClose">Close</button>
+    </div>
+  </div>
+
+  <!-- How To Play Modal -->
+  <div id="howToModal" class="modal hidden">
+    <div class="modal-content">
+      <h2>How to Play</h2>
+      <ol>
+        <li>Select a difficulty and cell size, then click a tile to begin.</li>
+        <li>Numbers show how many bombs are adjacent to the cell.</li>
+        <li>Right-click or long-press to flag a suspected bomb.</li>
+        <li>Use up to 2 hints per round (click the 💡 bulb on the smiley!)</li>
+        <li>Win by clearing all safe tiles. Lose by clicking a bomb.</li>
+        <li>Daily challenges and streaks reward regular play!</li>
+      </ol>
+      <button id="howToClose">Close</button>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
