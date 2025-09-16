@@ -2,76 +2,101 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1.0">
   <title>Minesweeping</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <!-- Login Modal -->
-  <div id="loginModal" class="modal">
+  <!-- Modal for username/password on first visit -->
+  <div id="auth-modal" class="modal hidden">
     <div class="modal-content">
-      <h2>Welcome to Minesweeping!</h2>
-      <form id="loginForm">
-        <label for="username">Username:</label>
-        <input id="username" name="username" required>
-        <label for="password">Password:</label>
-        <input id="password" type="password" name="password" required>
-        <button type="submit">Login</button>
-        <p id="loginError"></p>
-        <small>No account recovery! If you forget your password, your account is lost.</small>
+      <h2>Welcome to Minesweeping</h2>
+      <p>Please choose a username and password. <b>No recovery possible!</b></p>
+      <form id="auth-form">
+        <input type="text" id="username" placeholder="Username" required>
+        <input type="password" id="password" placeholder="Password" required>
+        <button type="submit">Continue</button>
       </form>
+      <p id="auth-error" class="error"></p>
+      <small class="disclaimer">Disclaimer: If you lose your password, your account cannot be recovered.</small>
     </div>
   </div>
 
   <!-- Daily Challenge Notification -->
-  <div id="dailyNotif" class="notif hidden">
-    <span>🎉 New Daily Challenge available!</span>
-    <button id="notifClose">X</button>
+  <div id="daily-notify" class="notify hidden">
+    <span id="daily-message"></span>
+    <button id="daily-close">OK</button>
   </div>
 
-  <!-- Main Menu -->
-  <div id="mainMenu" class="menu hidden">
+  <!-- Main menu -->
+  <div id="menu" class="screen">
     <h1>Minesweeping</h1>
-    <button id="playBtn">Play</button>
-    <button id="dailyBtn">Daily Challenge</button>
-    <button id="statsBtn">Statistics</button>
-    <button id="howToBtn">How to Play</button>
-    <button id="settingsBtn">Settings</button>
-    <div id="themePicker"></div>
-    <div id="currentUser"></div>
-    <button id="logoutBtn">Logout</button>
+    <div class="smiley-row">
+      <span id="smiley" class="smiley">🙂</span>
+      <span id="hint-icon" class="hint-icon hidden" title="Hint"></span>
+    </div>
+    <p>Welcome, <span id="current-user"></span>! <span id="user-streak"></span></p>
+    <button id="start-game-btn">Start Game</button>
+    <button id="daily-challenge-btn">Daily Challenge</button>
+    <button id="stats-btn">Statistics</button>
+    <button id="how-to-btn">How to Play</button>
+    <button id="settings-btn">Settings</button>
+    <button id="logout-btn">Logout</button>
   </div>
 
-  <!-- Game UI -->
-  <div id="gameContainer" class="hidden">
-    <div id="gameHeader">
-      <button id="backBtn">← Menu</button>
-      <div id="bombCounter">000</div>
-      <div id="smileyFace" title="Restart Game">
-        <span id="smileyIcon">😊</span>
-        <span id="hintBulb" class="hidden" title="Use a hint">💡x2</span>
-      </div>
-      <div id="timer">000</div>
-      <button id="fullscreenBtn">[⛶]</button>
+  <!-- Game Screen -->
+  <div id="game" class="screen hidden">
+    <div class="top-bar">
+      <button id="back-to-menu">← Back</button>
+      <span id="game-smiley" class="smiley">🙂</span>
+      <span id="game-hint-icon" class="hint-icon hidden" title="Hint"></span>
+      <span id="timer">000</span>
+      <span id="bombs-left">Bombs: 0</span>
+      <button id="fullscreen-btn">Fullscreen</button>
+      <button id="field-fullscreen-btn">Field Fullscreen</button>
     </div>
-    <div id="minefield"></div>
-    <div id="cellSizePicker">
-      <label>Cell Size:
-        <select id="cellSizeSelect">
-          <option value="small">Small (classic)</option>
-          <option value="medium">Medium</option>
-          <option value="large">Large</option>
-        </select>
-      </label>
+    <div id="minefield-container">
+      <div id="minefield"></div>
+    </div>
+    <div class="game-bottom">
+      <span id="difficulty-label"></span>
+      <span id="cell-size-label"></span>
+      <span id="bombs-flagged-label"></span>
     </div>
   </div>
 
-  <!-- Settings Modal -->
-  <div id="settingsModal" class="modal hidden">
-    <div class="modal-content">
-      <h2>Settings</h2>
+  <!-- Statistics Screen -->
+  <div id="stats" class="screen hidden">
+    <button class="back-btn">← Back</button>
+    <h2>Your Statistics</h2>
+    <div id="stats-content"></div>
+  </div>
+
+  <!-- How to Play Screen -->
+  <div id="howto" class="screen hidden">
+    <button class="back-btn">← Back</button>
+    <h2>How to Play</h2>
+    <div class="howto-content">
+      <p>
+        Minesweeping is a classic puzzle game. Uncover all cells that don't contain bombs. Flag cells you think contain bombs. Use the numbers to deduce where bombs are. Two hints per round available!
+      </p>
+      <ul>
+        <li>Left click: Reveal cell</li>
+        <li>Right click or long tap: Place/remove flag</li>
+        <li>Smiley face: Restart game</li>
+        <li>Hints: Click the lightbulb on smiley</li>
+      </ul>
+      <p>Good luck!</p>
+    </div>
+  </div>
+
+  <!-- Settings Screen -->
+  <div id="settings" class="screen hidden">
+    <button class="back-btn">← Back</button>
+    <h2>Settings</h2>
+    <form id="settings-form">
       <label>Theme:
-        <select id="themeSelect">
+        <select id="theme-select">
           <option value="classic">Classic</option>
           <option value="light">Light</option>
           <option value="dark">Dark</option>
@@ -79,42 +104,22 @@
         </select>
       </label>
       <label>Difficulty:
-        <select id="difficultySelect">
+        <select id="difficulty-select">
           <option value="easy">Easy</option>
           <option value="medium">Medium</option>
           <option value="hard">Hard</option>
           <option value="extreme">Extreme</option>
         </select>
       </label>
-      <button id="settingsClose">Close</button>
-    </div>
-  </div>
-
-  <!-- Statistics Modal -->
-  <div id="statsModal" class="modal hidden">
-    <div class="modal-content">
-      <h2>Statistics</h2>
-      <div id="statsContent">
-        <!-- Stats dynamically populated -->
-      </div>
-      <button id="statsClose">Close</button>
-    </div>
-  </div>
-
-  <!-- How To Play Modal -->
-  <div id="howToModal" class="modal hidden">
-    <div class="modal-content">
-      <h2>How to Play</h2>
-      <ol>
-        <li>Select a difficulty and cell size, then click a tile to begin.</li>
-        <li>Numbers show how many bombs are adjacent to the cell.</li>
-        <li>Right-click or long-press to flag a suspected bomb.</li>
-        <li>Use up to 2 hints per round (click the 💡 bulb on the smiley!)</li>
-        <li>Win by clearing all safe tiles. Lose by clicking a bomb.</li>
-        <li>Daily challenges and streaks reward regular play!</li>
-      </ol>
-      <button id="howToClose">Close</button>
-    </div>
+      <label>Cell Size:
+        <select id="cell-size-select">
+          <option value="small">Small</option>
+          <option value="medium" selected>Medium</option>
+          <option value="large">Large</option>
+        </select>
+      </label>
+    </form>
+    <button id="save-settings-btn">Save</button>
   </div>
 
   <script src="script.js"></script>
