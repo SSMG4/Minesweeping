@@ -5,6 +5,7 @@
   <title>Minesweeping</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="styles.css">
+  <link rel="icon" href="favicon.ico" type="image/x-icon">
 </head>
 <body>
   <!-- Modal for username/password on first visit -->
@@ -32,7 +33,9 @@
   <div id="menu" class="screen">
     <h1>Minesweeping</h1>
     <div class="smiley-row">
-      <span id="smiley" class="smiley">🙂</span>
+      <div class="circle">
+        <img id="smiley" class="smiley-img" src="littleguydefault.png" alt="Smiley">
+      </div>
       <span id="hint-icon" class="hint-icon hidden" title="Hint"></span>
     </div>
     <p>Welcome, <span id="current-user"></span>! <span id="user-streak"></span></p>
@@ -48,10 +51,12 @@
   <div id="game" class="screen hidden">
     <div class="top-bar">
       <button id="back-to-menu">← Back</button>
-      <span id="game-smiley" class="smiley">🙂</span>
+      <div class="circle">
+        <img id="game-smiley" class="smiley-img" src="littleguydefault.png" alt="Smiley">
+      </div>
       <span id="game-hint-icon" class="hint-icon hidden" title="Hint"></span>
-      <span id="timer">000</span>
-      <span id="bombs-left">Bombs: 0</span>
+      <span id="timer" class="sevenseg">000</span>
+      <span id="bombs-left" class="sevenseg">010</span>
       <button id="fullscreen-btn">Fullscreen</button>
       <button id="field-fullscreen-btn">Field Fullscreen</button>
     </div>
@@ -75,18 +80,47 @@
   <!-- How to Play Screen -->
   <div id="howto" class="screen hidden">
     <button class="back-btn">← Back</button>
-    <h2>How to Play</h2>
+    <h2>How to Play Minesweeper</h2>
     <div class="howto-content">
       <p>
-        Minesweeping is a classic puzzle game. Uncover all cells that don't contain bombs. Flag cells you think contain bombs. Use the numbers to deduce where bombs are. Two hints per round available!
+        Minesweeper is a classic logic puzzle game. The goal is to uncover all the non-bomb cells on a grid, without clicking on a bomb.
       </p>
+      <h3>Game Basics</h3>
       <ul>
-        <li>Left click: Reveal cell</li>
-        <li>Right click or long tap: Place/remove flag</li>
-        <li>Smiley face: Restart game</li>
-        <li>Hints: Click the lightbulb on smiley</li>
+        <li>The grid contains a number of hidden bombs. The size and number depend on difficulty.</li>
+        <li>Each cell may be empty, contain a number, or be a bomb.</li>
+        <li>Numbers show how many bombs are adjacent (including diagonally) to that cell.</li>
+        <li>Use logic and deduction to figure out which cells are safe.</li>
       </ul>
-      <p>Good luck!</p>
+      <h3>Controls</h3>
+      <ul>
+        <li><b>Left click</b> (or tap): Reveal a cell.</li>
+        <li><b>Right click</b> (or long tap): Place or remove a flag to mark a suspected bomb.</li>
+        <li><b>Smiley face:</b> Restart the game. It changes expression when you win or lose.</li>
+        <li><b>Hints:</b> You get two hints per round. Click the lightbulb next to the smiley to reveal a safe cell.</li>
+      </ul>
+      <h3>Winning & Losing</h3>
+      <ul>
+        <li>You win by revealing all non-bomb cells.</li>
+        <li>You lose if you reveal a cell containing a bomb.</li>
+        <li>Your stats are tracked for wins, losses, hints, and streaks.</li>
+      </ul>
+      <h3>Tips & Strategies</h3>
+      <ul>
+        <li>Start by revealing random cells. Corners and edges are good bets.</li>
+        <li>Use the numbers to deduce where bombs are. If a cell shows "1" and only one adjacent cell is hidden, that hidden cell is a bomb.</li>
+        <li>Flag bombs to avoid accidentally clicking them.</li>
+        <li>If you’re stuck, use a hint. But remember, you only get two per round.</li>
+        <li>Try to clear areas where the numbers give obvious clues first. Practice will help you recognize patterns.</li>
+      </ul>
+      <h3>Legend</h3>
+      <ul>
+        <li><b>Timer</b>: Shows your elapsed time in red digits.</li>
+        <li><b>Bomb Counter</b>: Shows how many bombs are left to flag.</li>
+        <li><b>Smiley Icon</b>: Resets the board; changes for win/loss.</li>
+        <li><b>Flag</b>: Marks a suspected bomb location.</li>
+      </ul>
+      <p>Good luck! Minesweeper is about logic, deduction, and a touch of luck.</p>
     </div>
   </div>
 
