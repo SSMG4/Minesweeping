@@ -43,7 +43,8 @@ const settingsBtn = $('settings-btn');
 const logoutBtn = $('logout-btn');
 const backBtns = document.querySelectorAll('.back-btn');
 const backToMenuBtn = $('back-to-menu');
-const gameSmiley = $('game-smiley');
+// --- smileys are now images inside circles
+const gameSmileyImg = $('game-smiley');
 const gameHintIcon = $('game-hint-icon');
 const timerEl = $('timer');
 const bombsLeftEl = $('bombs-left');
@@ -60,7 +61,7 @@ const cellSizeSelect = $('cell-size-select');
 const saveSettingsBtn = $('save-settings-btn');
 const statsContent = $('stats-content');
 const hintIcon = $('hint-icon');
-const smiley = $('smiley');
+const smileyImg = $('smiley');
 
 // --- State ---
 let session = null;
@@ -241,11 +242,13 @@ function startGame(mode) {
   renderMinefield(cellSz);
   showScreen(screens.game);
   timerStart = Date.now();
-  timerEl.textContent = '000';
-  bombsLeftEl.textContent = `Bombs: ${preset.bombs}`;
+  setSevenSegment(timerEl, 0);
+  setSevenSegment(bombsLeftEl, preset.bombs);
   hintsUsed = 0;
   gameHintIcon.classList.remove('hidden');
   gameHintIcon.title = 'Click for hint';
+  gameSmileyImg.src = 'littleguydefault.png';
+  gameSmileyImg.classList.remove('lost','won');
   fullscreenBtn.onclick = () => document.documentElement.requestFullscreen();
   fieldFullscreenBtn.onclick = () => minefieldContainer.requestFullscreen();
   timerInt = setInterval(updateTimer, 1000);
@@ -253,8 +256,8 @@ function startGame(mode) {
 function clearGame() {
   minefield.innerHTML = '';
   clearInterval(timerInt);
-  timerEl.textContent = '000';
-  bombsLeftEl.textContent = '';
+  setSevenSegment(timerEl, 0);
+  setSevenSegment(bombsLeftEl, 0);
   bombsFlaggedLabel.textContent = '';
   mineState = null;
   hintsUsed = 0;
@@ -262,11 +265,9 @@ function clearGame() {
 
 // --- Minefield Logic ---
 function makeMineState(rows, cols, bombs) {
-  // grid: [{revealed, bomb, flagged, num}]
   let grid = Array.from({length: rows}, () =>
     Array.from({length: cols}, () => ({ revealed:false, bomb:false, flagged:false, num:0 }))
   );
-  // Place bombs
   let allCells = [];
   for(let r=0;r<rows;r++)for(let c=0;c<cols;c++)allCells.push([r,c]);
   shuffle(allCells);
@@ -274,7 +275,6 @@ function makeMineState(rows, cols, bombs) {
     const [r,c] = allCells[i];
     grid[r][c].bomb = true;
   }
-  // Set numbers
   for(let r=0;r<rows;r++) {
     for(let c=0;c<cols;c++) {
       if(grid[r][c].bomb)continue;
@@ -322,7 +322,7 @@ function updateField() {
       }
     }
   }
-  bombsLeftEl.textContent = `Bombs: ${mineState.bombs - mineState.flags}`;
+  setSevenSegment(bombsLeftEl, mineState.bombs - mineState.flags);
   bombsFlaggedLabel.textContent = `Flags placed: ${mineState.flags}`;
 }
 function handleCellClick(e, r, c, touch=false) {
@@ -353,8 +353,9 @@ function revealCell(r,c) {
   mineState.revealed++;
   if(cell.bomb) {
     mineState.lost = true;
-    gameSmiley.textContent = '😵';
-    gameSmiley.classList.add('lost');
+    gameSmileyImg.src = 'littleguysad.png';
+    gameSmileyImg.classList.add('lost');
+    gameSmileyImg.classList.remove('won');
     endGame(false);
     return;
   } else if(cell.num===0) {
@@ -366,8 +367,9 @@ function revealCell(r,c) {
   }
   if(mineState.revealed + mineState.bombs === mineState.rows*mineState.cols) {
     mineState.won = true;
-    gameSmiley.textContent = '😄';
-    gameSmiley.classList.add('won');
+    gameSmileyImg.src = 'littleguyhappy.png';
+    gameSmileyImg.classList.add('won');
+    gameSmileyImg.classList.remove('lost');
     endGame(true);
   }
 }
@@ -412,11 +414,17 @@ function endGame(win) {
 function updateTimer() {
   if (!timerStart) return;
   const sec = Math.floor((Date.now()-timerStart)/1000);
-  timerEl.textContent = sec.toString().padStart(3,'0');
+  setSevenSegment(timerEl, sec);
+}
+
+// --- Seven Segment display rendering ---
+function setSevenSegment(el, num) {
+  let str = Number(num).toString().padStart(3,'0');
+  el.textContent = str;
 }
 
 // --- Smiley + Hint ---
-gameSmiley.onclick = function() {
+gameSmileyImg.onclick = function() {
   if(mineState && (mineState.lost||mineState.won)) startGame('normal');
 };
 gameHintIcon.onclick = function() {
@@ -431,7 +439,6 @@ gameHintIcon.onclick = function() {
   }
 };
 function getHint() {
-  // Reveal a safe cell not revealed or flagged
   for(let r=0;r<mineState.rows;r++)for(let c=0;c<mineState.cols;c++) {
     const cell = mineState.grid[r][c];
     if(!cell.revealed && !cell.flagged && !cell.bomb) return {r,c};
@@ -441,7 +448,8 @@ function getHint() {
 
 // --- Smiley in menu (for daily/hint visual) ---
 function updateMenuSmiley() {
-  smiley.textContent = "🙂";
+  smileyImg.src = "littleguydefault.png";
+  smileyImg.classList.remove('lost','won');
   if(dailyChallenge && !dailyChallenge.completed && dailyChallenge.date === todayStr()) {
     hintIcon.classList.remove('hidden');
     hintIcon.title = "Daily Challenge hint";
@@ -449,7 +457,7 @@ function updateMenuSmiley() {
     hintIcon.classList.add('hidden');
   }
 }
-smiley.onclick = () => startGame('normal');
+smileyImg.onclick = () => startGame('normal');
 hintIcon.onclick = () => gameHintIcon.onclick();
 
 // --- Fullscreen ---
