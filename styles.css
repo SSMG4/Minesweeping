@@ -10,6 +10,9 @@
   --black-bg: #111;
   --black-cell: #222;
   --font-main: 'Segoe UI', Arial, sans-serif;
+  --sevenseg-bg: #22272a;
+  --sevenseg-digit: #d20000;
+  --sevenseg-shadow: #444;
 }
 
 /* General */
@@ -53,15 +56,49 @@ body {
 
 /* Smiley and hint */
 .smiley-row { display: flex; align-items: center; justify-content: center; gap: 1em; margin-bottom: 1em; }
-.smiley {
-  font-size: 2.2em; background: var(--classic-smiley); border-radius: 50%; padding: 0.2em 0.4em;
-  border: 2px solid #aaa; cursor: pointer; transition: background 0.2s;
+.circle {
+  background: var(--classic-smiley);
+  border: 2px solid #aaa;
+  border-radius: 50%;
+  aspect-ratio: 1 / 1;
+  width: 52px;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 0.3em;
+  box-sizing: border-box;
 }
-.smiley.lost { background: #f33; }
-.smiley.won { background: #7ed957; }
+.smiley-img {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  display: block;
+}
+.smiley.lost,
+.smiley-img.lost { background: #f33; }
+.smiley.won,
+.smiley-img.won { background: #7ed957; }
 .hint-icon {
   width: 28px; height: 28px; background: url('data:image/svg+xml;utf8,<svg width="28" height="28" viewBox="0 0 28 28" fill="yellow" xmlns="http://www.w3.org/2000/svg"><circle cx="14" cy="14" r="13" stroke="black" stroke-width="2" fill="yellow"/><rect x="12" y="18" width="4" height="6" fill="black"/><path d="M14 14v-7" stroke="black" stroke-width="2"/><circle cx="14" cy="21" r="2" fill="yellow" stroke="black" stroke-width="1"/></svg>') center/contain no-repeat;
   display: inline-block; cursor: pointer; margin-left: 0.5em;
+}
+
+/* Seven Segment Display */
+.sevenseg {
+  font-family: 'Seven Segment', 'Courier New', monospace;
+  font-size: 2.3em;
+  background: var(--sevenseg-bg);
+  color: var(--sevenseg-digit);
+  padding: 0.17em 0.38em;
+  border-radius: 8px;
+  box-shadow: 0 0 8px var(--sevenseg-shadow) inset, 0 2px 8px #444;
+  letter-spacing: 0.12em;
+  display: inline-block;
+  min-width: 70px;
+  text-align: center;
+  border: 2px solid #3c3c3c;
+  margin: 0 0.3em;
 }
 
 /* Top bar */
@@ -105,14 +142,39 @@ button, select, input {
 button:hover, select:hover { background: #e3e3e3; }
 .back-btn, #back-to-menu { position: relative; left: -1em; margin-bottom: 1em; }
 
+/* How to Play styles */
+.howto-content {
+  max-width: 600px;
+  background: #fff;
+  border-radius: 8px;
+  padding: 1.2em 1.8em;
+  box-shadow: 0 2px 12px #bbb;
+  color: #222;
+}
+.howto-content h3 {
+  margin-top: 1em;
+  margin-bottom: 0.5em;
+}
+.howto-content ul {
+  margin-bottom: 1em;
+}
+.howto-content li {
+  margin-bottom: 0.5em;
+}
+
+/* Responsive */
 @media (max-width: 700px) {
   .screen { height: auto; padding: 1em 0; }
   #minefield { margin-bottom: 0.5em; }
   .cell { width: 22px; height: 22px; font-size: 0.9em; }
   .cell.large { width: 34px; height: 34px; font-size: 1.1em; }
+  .sevenseg { font-size: 1.4em; min-width: 48px; }
+  .circle { width: 38px; height: 38px; }
+  .smiley-img { width: 28px; height: 28px; }
 }
 
 @media (max-width: 420px) {
   .modal-content { padding: 1em; min-width: 180px; }
   .notify { padding: 0.7em 1.2em; }
+  .howto-content { padding: 0.6em 0.7em; }
 }
